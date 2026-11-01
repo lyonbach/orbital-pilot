@@ -80,7 +80,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.4, 0)
 emitting = false
 amount = 80
 lifetime = 0.25
-local_coords = true
+local_coords = false
 process_material = SubResource("ParticleProcessMaterial_core")
 draw_pass_1 = SubResource("QuadMesh_core")
 
@@ -89,6 +89,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.4, 0)
 emitting = false
 amount = 120
 lifetime = 0.9
-local_coords = true
+local_coords = false
 process_material = SubResource("ParticleProcessMaterial_smoke")
 draw_pass_1 = SubResource("QuadMesh_smoke")
