@@ -12,11 +12,14 @@ var landed := false
 var crashed := false
 
 @onready var engine_light: OmniLight3D = $EngineLight
-@onready var exhaust: MeshInstance3D = $Exhaust
+@onready var exhaust_core: GPUParticles3D = $ExhaustCore
+@onready var exhaust_smoke: GPUParticles3D = $ExhaustSmoke
 
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	exhaust_core.emitting = false
+	exhaust_smoke.emitting = false
 
 
 func _physics_process(delta: float) -> void:
@@ -39,7 +42,8 @@ func _physics_process(delta: float) -> void:
 		fuel = maxf(0.0, fuel - absf(side_input + rotate_input) * fuel_burn * 0.35 * delta)
 
 	engine_light.visible = using_engine
-	exhaust.visible = using_engine
+	exhaust_core.emitting = using_engine
+	exhaust_smoke.emitting = using_engine
 
 
 func _on_body_entered(body: Node) -> void:
@@ -53,10 +57,16 @@ func _on_body_entered(body: Node) -> void:
 		if vertical_speed <= max_landing_speed and tilt <= max_landing_tilt_degrees:
 			landed = true
 			freeze = true
+			exhaust_core.emitting = false
+			exhaust_smoke.emitting = false
 			print("Landing successful. Impact speed: %.2f, tilt: %.1f degrees" % [vertical_speed, tilt])
 		else:
 			crashed = true
+			exhaust_core.emitting = false
+			exhaust_smoke.emitting = false
 			print("Crashed on pad. Speed: %.2f, tilt: %.1f degrees" % [vertical_speed, tilt])
 	else:
 		crashed = true
+		exhaust_core.emitting = false
+		exhaust_smoke.emitting = false
 		print("Crashed into terrain.")
