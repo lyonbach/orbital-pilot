@@ -32,12 +32,18 @@ func _physics_process(delta: float) -> void:
 
 	var using_engine := main_input > 0.0 and fuel > 0.0
 
+	# The ship's local +Y axis points through its nose.
+	# Transforming it by global_transform.basis converts it into world space,
+	# so rotating the ship rotates the main-thrust vector too.
+	var ship_up := global_transform.basis.y
+	var ship_right := global_transform.basis.x
+
 	if using_engine:
-		apply_central_force(Vector3(0.0, main_thrust * main_input, 0.0))
+		apply_central_force(ship_up * main_thrust * main_input)
 		fuel = maxf(0.0, fuel - fuel_burn * delta)
 
 	if fuel > 0.0:
-		apply_central_force(Vector3(side_thrust * side_input, 0.0, 0.0))
+		apply_central_force(ship_right * side_thrust * side_input)
 		apply_torque(Vector3(0.0, 0.0, -rotation_torque * rotate_input))
 		fuel = maxf(0.0, fuel - absf(side_input + rotate_input) * fuel_burn * 0.35 * delta)
 
